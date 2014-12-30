@@ -1,112 +1,72 @@
-# Jekyll Now
+---
+layout: post
+title: Installing OpenBSD on a Macbook Pro 7,1
+---
 
-**Jekyll** is a static site generator that's perfect for GitHub hosted blogs ([Jekyll Repository](https://github.com/jekyll/jekyll))
+### TEST POST ###
 
-**Jekyll Now** makes it easier to create your Jekyll blog, by eliminating a lot of the up front setup.
+After using my Macbook Pro 7,1 (mid-2010) for several years, it began to show the usual signs
+of wear and tear. The boot up time was already over a minute to reach even the login screen and even 
+after logging in the load time to generate a usable desktop was laughable. Starting applications 
+would take on average between 15 - 20 seconds each time. 
+OWC came to the rescue with an offer to increase RAM to 8GB and swapping the SATA drive for an SSD.
+This change made a huge difference. Startup time is down to 10seconds and as soon as I am logged 
+in there is no longer the lag in opening any application. I highly recommend a hardware upgrade!
 
-- You don't need to touch the command line
-- You don't need to install/configure ruby, rvm/rbenv, ruby gems :relaxed:
-- You don't need to install runtime dependancies like markdown processors, Pygments, etc
-- If you're on Windows, this will make setting up Jekyll a lot easier
-- It's easy to try out, you can just delete your forked repository if you don't like it
+Since I had 480GB of SSD to play with I decided to try to dualboot another OS. I have been
+interested in moving away from Linux towards something more UNIX-like but the opportunity never
+came about until now.
 
-In a few minutes you'll be set up with a minimal, responsive blog like the one below giving you more time to spend on writing epic blog posts!
+I had tested the various illumos based distributions on VirtualBox -(OpenIndiana and OmniOS), and although
+it was great to see the Solaris kernel based  distribution alive (almost re: OpenIndiana), the lack of hardware
+support and the reliance on Solaris closed binaries was not to my liking. I wanted an OS
+that did not have the proprietry baggage of a previous history. So after a quick scope of the land
+I decided to try out OpenBSD. I had not used it in many years and it looked I was attempting to install
+it on hardware with limited support but that is all part of the fun. It would also give me an excuse to
+follow the mailing lists and learn more about UNIX internals.
 
-![Jekyll Now Theme Screenshot](/images/jekyll-now-theme-screenshot.jpg "Jekyll Now Theme Screenshot")
+#### Pre-Installation
 
-## Quick Start
+Since I liked using OSX, I wanted to dual-boot both operating systems. Dual booting can be achieved 
+using the rEFInd Boot Manager - http://www.rodsbooks.com/refind/. Apple hardware uses EFI instead of
+the traditional BIOS for booting. The installation on OSX is simple:
 
-### Step 1) Fork Jekyll Now to your User Repository
+`
+$ unzip refind-bin-0.8.4.zip
+$ cd refind-bin-0.8.4
+$ sudo ./install.sh`
 
-Fork this repo, then rename the repository to yourgithubusername.github.io.
+This will create an efi directory on  / which you should not need to touch. 
 
-Your Jekyll blog will often be viewable immediately at <http://yourgithubusername.github.io> (if it's not, you can often force it to build by completing step 2)
+It would be a good idea to install any OSX updates needed and do a full backup with Time Machine
+or a cloning method of your choice. 
 
-![Step 1](/images/step1.gif "Step 1")
+#### Installation and Configuration
 
-### Step 2) Customize and view your site
+Download install56.fs from your nearest OpenBSD mirror and dd it to a USB drive:
 
-Enter your site name, description, avatar and many other options by editing the _config.yml file. You can easily turn on Google Analytics tracking, Disqus commenting and social icons here too.
+`# diskutil unmountDisk /dev/disk1`
+`# dd if=./install56.fs of=./dev/rdisk1 bs=1m`
+`# reboot`
 
-Making a change to _config.yml (or any file in your repository) will force GitHub Pages to rebuild your site with jekyll. Your rebuilt site will be viewable a few seconds later at <http://yourgithubusername.github.io> - if not, give it ten minutes as GitHub suggests and it'll appear soon
+Once the rEFInd menu loads you should be able to see the Puffy logo alongside the Apple. Select the Puffy and hit enter. 
 
-> There are 3 different ways that you can make changes to your blog's files:
+The first thing to do is to break out to the shell prompt and partition the disks. Once the disks are partitioned continue by typing 'install' and going through the install process. Once the partition layout process appears choose Custom Layout and you should be able to see the partitions you already created. Make sure to assign mount points and save. Use sd0 for package locations.
+ 
+#### Post-Installation
 
-> 1. Edit files within your new username.github.io repository in the browser at GitHub.com (shown below).
-> 2. Use a third party GitHub content editor, like [Prose by Development Seed](http://prose.io). It's optimized for use with Jekyll making markdown editing, writing drafts, and uploading images really easy.
-> 3. Clone down your repository and make updates locally, then push them to your GitHub repository.
+On reboot OpenBSD comes up without too much of an issue. The WiFi card is not supported so I used a cable instead. The first thing to do is to install some utilities to get a basic desktop up and running.
 
-![_config.yml](/images/config.png "_config.yml")
-  
-### Step 3) Publish your first blog post
+`# echo "PKG_PATH=ftp://ftp.heanet.ie/pub/OpenBSD/5.6/`machine -a`/" >> ~/.profile`
+`# echo "export PKG_PATH" >> ~/.profile`
+`# pkg_add -i -v  vim mutt xfce`
+`$ echo 'exec startxfce4' >> .xinitrc`
 
-Edit `/_posts/2014-3-3-Hello-World.md` to publish your first blog post. This [Markdown Cheatsheet](http://www.jekyllnow.com/Markdown-Style-Guide/) might come in handy.
+Running `startx` starts up XFCE and gives you a taste of an OpenBSD desktop.
 
-![First Post](/images/first-post.png "First Post")
+#### Thoughts
 
-> You can add additional posts in the browser on GitHub.com too! Just hit the + icon in `/_posts/` to create new content. Just make sure to include the [front-matter](http://jekyllrb.com/docs/frontmatter/) block at the top of each new blog post and make sure the post's filename is in this format: year-month-day-title.md
+So what works?
 
-## Local Development
-
-1. Install Jekyll and plug-ins in one fell swoop. `gem install github-pages` This mirrors the plug-ins used by GitHub Pages on your local machine including Jekyll, Sass, Gemoji, etc.
-2. Clone down your fork `git clone git@github.com:yourusername/yourusername.github.io.git`
-3. Serve the site and watch for markup/sass changes `jekyll serve`
-4. View your website at http://0.0.0.0:4000
-5. Commit any changes and push everything to the master branch of your GitHub user repository. GitHub Pages will then rebuild and serve your website.
-
-## Moar!
-
-I've created a more detailed walkthrough, [**Build A Blog With Jekyll And GitHub Pages**](http://www.smashingmagazine.com/2014/08/01/build-blog-jekyll-github-pages/) over at the Smashing Magazine website. Check it out if you'd like a more detailed walkthrough and some background on Jekyll. :metal:
-
-It covers:
-
-- A more detailed walkthrough of setting up your Jekyll blog
-- Common issues that you might encounter while using Jekyll
-- Importing from Wordpress, using your own domain name, and blogging in your favorite editor
-- Theming in Jekyll, with Liquid templating examples
-- A quick look at Jekyll 2.0’s new features, including Sass/Coffeescript support and Collections
-
-## Jekyll Now Features
-
-✓ Command-line free _fork-first workflow_, using GitHub.com to create, customize and post to your blog  
-✓ Fully responsive and mobile optimized base theme (**[Theme Demo](http://jekyllnow.com)**)  
-✓ Sass/Coffeescript support using Jekyll 2.0  
-✓ Free hosting on your GitHub Pages user site  
-✓ Markdown blogging  
-✓ Syntax highlighting  
-✓ Disqus commenting  
-✓ Google Analytics integration  
-✓ SVG social icons for your footer  
-✓ 3 http requests, including your avatar  
-✓ Emoji in blog posts! :sparkling_heart: :sparkling_heart: :sparkling_heart:  
-
-✘ No installing dependancies  
-✘ No need to set up local development  
-✘ No configuring plugins  
-✘ No need to spend time on theming  
-✘ More time to code other things ... wait ✓!  
-
-## Questions?
-
-[Open an Issue](https://github.com/barryclark/jekyll-now/issues/new) and let's chat!
-
-## Other forkable themes
-
-You can use the [Quick Start](https://github.com/barryclark/jekyll-now#quick-start) workflow with other themes that are set up to be forked too! Here are some of my favorites:
-
-- [Hyde](https://github.com/poole/hyde) by MDO
-- [Lanyon](https://github.com/poole/lanyon) by MDO
-- [mojombo.github.io](https://github.com/mojombo/mojombo.github.io) by Tom Preston-Werner
-- [Left](https://github.com/holman/left) by Zach Holman
-- [Minimal Mistakes](https://github.com/mmistakes/minimal-mistakes) by Michael Rose
-- [Skinny Bones](https://github.com/mmistakes/skinny-bones-jekyll) by Michael Rose
-
-## Credits
-
-- [Jekyll](https://github.com/jekyll/jekyll) - Thanks to its creators, contributors and maintainers.
-- [SVG icons](https://github.com/neilorangepeel/Free-Social-Icons) - Thanks, Neil Orange Peel. They're beautiful. 
-- [Solarized Light Pygments](https://gist.github.com/edwardhotchkiss/2005058) - Thanks, Edward.
-- [Joel Glovier](http://joelglovier.com/writing/) - Great Jekyll articles. I used Joel's feed.xml in this repository.
-- [David Furnes](https://github.com/dfurnes), [Jon Uy](https://github.com/jonuy), [Luke Patton](https://github.com/lkpttn) - Thanks for the design/code reviews.
-- [Bart Kiers](https://github.com/bkiers), [Florian Simon](https://github.com/vermluh), [Henry Stanley](https://github.com/henryaj), [Hun Jae Lee](https://github.com/hunjaelee), [Javier Cejudo](https://github.com/javiercejudo), [Peter Etelej](https://github.com/etelej) - Thanks for your [fantastic contributions](https://github.com/barryclark/jekyll-now/commits/master) to the project!
-
+Installing OpenBSD on Apple hardware is never going to be easy. This generation of hardware does
+not make it any easier. The biggest issues are the NVidia Geforce 320M graphics card and the Broadcom BCM4331 wireless card. Neither provide good support and documentation for creating Open Source drivers. The Xenocara project attempts to cover most NVidia cards with the 'nv' driver but unfortunately this particular card is not supported. There is currently no sign of Broadcom support in the near future so to get around this I used a mini Edimax WiFi USB adapter using the urtwn driver. This works without any problems.
