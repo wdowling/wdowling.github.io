@@ -33,7 +33,11 @@ booting can be achieved using the rEFInd Boot Manager -
 http://www.rodsbooks.com/refind/. Apple hardware uses EFI instead of the
 traditional BIOS for booting. The installation on OSX is simple:
 
-` $ unzip refind-bin-0.8.4.zip $ cd refind-bin-0.8.4 $ sudo ./install.sh`
+`$ unzip refind-bin-0.8.4.zip`
+
+`$ cd refind-bin-0.8.4`
+
+`$ sudo ./install.sh`
 
 This will create an efi directory on  / which you should not need to touch. 
 
@@ -44,8 +48,11 @@ with Time Machine or a cloning method of your choice.
 
 Download install56.fs from your nearest OpenBSD mirror and dd it to a USB drive:
 
-`# diskutil unmountDisk /dev/disk1` `# dd if=./install56.fs of=./dev/rdisk1
-bs=1m` `# reboot`
+`# diskutil unmountDisk /dev/disk1` 
+
+`# dd if=./install56.fs of=./dev/rdisk1 bs=1m` 
+
+`# reboot`
 
 Once the rEFInd menu loads you should be able to see the Puffy logo alongside
 the Apple. Select the Puffy and hit enter. 
@@ -63,8 +70,13 @@ supported so I used a cable instead. The first thing to do is to install some
 utilities to get a basic desktop up and running.
 
 `# echo "PKG_PATH=ftp://ftp.heanet.ie/pub/OpenBSD/5.6/`machine -a`/" >>
-~/.profile` `# echo "export PKG_PATH" >> ~/.profile` `# pkg_add -i -v  vim mutt
-xfce` `$ echo 'exec startxfce4' >> .xinitrc`
+~/.profile` 
+
+`# echo "export PKG_PATH" >> ~/.profile` 
+
+`# pkg_add -i -v  vim mutt xfce` 
+
+`$ echo 'exec startxfce4' >> .xinitrc`
 
 Running `startx` starts up XFCE and gives you a taste of an OpenBSD desktop.
 
