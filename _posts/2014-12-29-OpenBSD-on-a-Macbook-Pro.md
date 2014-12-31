@@ -1,7 +1,7 @@
---- layout: post title: Installing OpenBSD on a Macbook Pro 7,1 ---
-
-### TEST POST ###
-
+---
+layout: post
+title: OpenBSD on a MacBook Pro
+---
 After using my Macbook Pro 7,1 (mid-2010) for several years, it began to show
 the usual signs of wear and tear. Boot up was already over a minute long to
 reach the login screen and even after logging in the load time to generate
