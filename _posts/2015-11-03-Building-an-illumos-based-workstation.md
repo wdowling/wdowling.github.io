@@ -18,10 +18,10 @@ build and test [illumos](https://illumos.org) kernels.
 
 #### The Specs
 
-Initially I was going to build a cheap as I could using an i5, 8GB RAM and 
-10k RPM disks but I decided against that since I wanted this build to be an 
-investment. It not only will be my testing ground but I will use it as a file- 
-server, webserver etc. After some researching I settled on the following:
+Initially I was going to build as cheap as I could using an i5, 8GB RAM and 
+10k RPM disks but I decided against that, since I wanted this build to be an 
+investment. It not only will be my testing ground but I will use it as a file-
+server, webserver etc. After some research I settled on the following:
 
 * Intel Core i7 4790k
 * Asus Maximus Hero VII
@@ -48,10 +48,10 @@ The build is nothing complex. No special cooling systems for overclocking.
 
 #### Installing SmartOS
 
-Installing SmartOS is simply a matter of ensuring your BIOS has VT-X enabled and
-having a working internet connection. I chose RAIDZ as I did not want to
-sacrifice too much space having only four 500GB disks. This gave me 1.3TB to
-work with.
+Installing SmartOS is simply a matter of ensuring your BIOS has virtualization 
+enabled and having a working internet connection. I chose RAIDZ as I did not 
+want to sacrifice too much space having only four 500GB disks. This gave me 
+1.3TB to work with.
 
 ![Server Information](../images/SmartOS.png)
 
@@ -87,7 +87,7 @@ Save this file as omnios.json under /usbkey so it is not lost on a reboot.
       "nics": [
        {
         "nic_tag": "admin",
-        "ip": "192.168.1.41",
+        "ip": "192.168.1.10",
         "netmask": "255.255.255.0",
         "gateway": "192.168.1.1",
         "model": "virtio",
@@ -121,7 +121,7 @@ The UUID is the new VM just created and can be seen under vmadm list.
 
     [root@sol ~]# vmadm list
     UUID                                  TYPE  RAM      STATE             ALIAS
-    68f0a396-0d00-4114-bebb-258d2ec454b1  KVM   8196     running           -
+    68f0a396-0d00-4114-bebb-258d2ec454b1  KVM   2048     running           -
 
 The VM is now ready to be booted with the install ISO. To do this we need to 
 download the ISO to the root directory of the VM.
@@ -134,7 +134,7 @@ Once the ISO is downloaded, boot up the VM with the ISO and connect using VNC.
 
 The VNC information can be retreived from the vmadm info command.
 
-    [root@sol ~]# vmadm info 68f0a396-0d00-4114-bebb-258d2ec4f80b
+    [root@sol ~]# vmadm info 68f0a396-0d00-4114-bebb-258d2ec454b1
     {
       "status": {
       "hwsetup": true,
@@ -153,7 +153,7 @@ The VNC information can be retreived from the vmadm info command.
     }
 
 You can proceed to connect using a VNC client to 192.168.1.2 on port 36412 and 
-follow the OmniOS installation. Once complete the final step before proceeding 
+follow the OmniOS installation. Once complete the final task before proceeding 
 with the [OmniOS post-install steps](http://omnios.omniti.com/wiki.php/GeneralAdministration) 
 is to revert the disk driver from ide to virtio.
 
@@ -189,3 +189,10 @@ the following commands to refresh the device cache.
     zpool export rpool
 
 The VM can now be rebooted and the post-installation tasks can be carried out.
+
+#### Useful links
+
+* Creating a VM in SmartOS - <https://wiki.smartos.org/display/DOC/How+to+create+a+Virtual+Machine+in+SmartOS>
+* Creating a KVM VM - <https://wiki.smartos.org/display/DOC/How+to+create+a+KVM+VM+%28+Hypervisor+virtualized+machine+%29+in+SmartOS>
+* vmadm JSON Quick Reference - <https://wiki.smartos.org/display/DOC/vmadm+JSON+Quick+Reference>
+* OmniOS post-install steps - <http://omnios.omniti.com/wiki.php/GeneralAdministration>
