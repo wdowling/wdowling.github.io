@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Building an illumos based workstations
+title: Building an illumos based workstation
 ---
 
 I have been working slowly with [OpenIndiana](https://www.openindiana.org) and 
